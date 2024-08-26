@@ -1,20 +1,30 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const usersRoutes = require('./routes/users');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
+const app = express();
+app.use(cors()); // Enable CORS for all routes
+app.use(bodyParser.json());
+mongoose.connect('mongodb+srv://medaminegh50:Aminegh90@pfedb.90fe3.mongodb.net/?retryWrites=true&w=majority');
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'erreur de connection a mongodb'));
+db.once('open', () => {
+    console.log('connecte a mongodb');
+});
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-console.log("sdksjf");
-module.exports = app;
+app.use('/api', usersRoutes);
+
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({
+        error: 'Internal server Error',
+    });
+});
+
+app.listen(3001, () => {
+    console.log('serveur en ecoute sur le port 3001');
+});

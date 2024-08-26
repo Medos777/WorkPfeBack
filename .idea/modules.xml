@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/PfeBack.iml" filepath="$PROJECT_DIR$/.idea/PfeBack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../faculteprvback/.idea/stageback.iml" filepath="$PROJECT_DIR$/../faculteprvback/.idea/stageback.iml" />
     </modules>
   </component>
 </project>
