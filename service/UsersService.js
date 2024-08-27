@@ -6,6 +6,9 @@ module.exports  = {
     async findById(id) {
         return await userRepository.findById(id);
     },
+    async findByRole(role){
+        return await userRepository.findByRole(role);
+    },
     async create(data){
        return await userRepository.create(data);
     },

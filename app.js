@@ -2,7 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const usersRoutes = require('./routes/users');
+const usersRoutes = require('./routes/usersRoutes');
+const authRoutes = require('./routes/AuthRoutes');
 
 
 const app = express();
@@ -17,7 +18,7 @@ db.once('open', () => {
 
 
 app.use('/api', usersRoutes);
-
+app.use('/api', authRoutes);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({

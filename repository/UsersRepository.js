@@ -1,28 +1,47 @@
 const Users = require('../model/Users');
 
 module.exports = {
-    async findAll(){
-        return await Users.find();
-
+    async findAll() {
+        try {
+            return await Users.find();
+        } catch (err) {
+            throw new Error(`Unable to retrieve users: ${err.message}`);
+        }
     },
-    async findById(id){
-        return await Users.findById(id);
-
+    async findById(id) {
+        try {
+            return await Users.findById(id);
+        } catch (err) {
+            throw new Error(`Unable to find user by ID: ${err.message}`);
+        }
     },
-
-    async update (id, data){
-        return await Users.findByIdAndUpdate(id, data, {new : true});
-
+    async findByRole(role) {
+        try {
+            return await Users.find({ role: role });
+        } catch (err) {
+            throw new Error(`Unable to find users by role: ${err.message}`);
+        }
     },
-    async delete(id){
-        return await Users.findByIdAndRemove(id);
+    async update(id, data) {
+        try {
+            return await Users.findByIdAndUpdate(id, data, { new: true });
+        } catch (err) {
+            throw new Error(`Unable to update user: ${err.message}`);
+        }
     },
-
-    async create(data){
-
-        const  users = new Users(data);
-        return await users.save();
+    async delete(id) {
+        try {
+            return await Users.findByIdAndDelete(id);
+        } catch (err) {
+            throw new Error(`Unable to delete user: ${err.message}`);
+        }
+    },
+    async create(data) {
+        try {
+            const user = new Users(data);
+            return await user.save();
+        } catch (err) {
+            throw new Error(`Unable to create user: ${err.message}`);
+        }
     }
-
-
 }
