@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/AuthRoutes');
-
+const projectRoutes=require('./routes/ProjectRoutes');
 
 const app = express();
 app.use(cors()); // Enable CORS for all routes
@@ -19,6 +19,7 @@ db.once('open', () => {
 
 app.use('/api', usersRoutes);
 app.use('/api', authRoutes);
+app.use('/api', projectRoutes);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({
