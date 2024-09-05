@@ -12,7 +12,7 @@ USersSchema = new Schema(
         role: {type: String,
                 enum: ['admin', 'manager', 'developer'],
                 required: false, default: "admin"}
-    });
+    },{ timestamps: true });
 USersSchema.pre('save', async function(next) {
         const user = this;
         if (user.isModified('password')) {
