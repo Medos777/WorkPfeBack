@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/AuthRoutes');
 const projectRoutes=require('./routes/ProjectRoutes');
+const issueRoutes=require('./routes/IssueRoutes');
+const teamRoutes=require('./routes/TeamRoutes');
 
 const app = express();
 app.use(cors()); // Enable CORS for all routes
@@ -20,6 +22,8 @@ db.once('open', () => {
 app.use('/api', usersRoutes);
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
+app.use('/api', issueRoutes);
+app.use('/api', teamRoutes);
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({

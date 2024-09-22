@@ -1,8 +1,5 @@
 const issue=require('../model/Issue');
-const Issue = require("./IssueRepository");
-const Project = require("../model/Project");
-const Users = require("../model/Users");
-
+const Project = require('../model/Project');
 module.exports={
     async findAll(){
         try{
@@ -37,6 +34,23 @@ module.exports={
             return await issue.find({project: project});
         } catch (e) {
             throw new Error(`Unable to find Issue by Project: ${e.message}`);
+        }
+    },
+    async create(data) {
+        try {
+            const newIssue = new issue(data);
+            const savedIssue = await newIssue.save();
+            const project = await Project.findById(data.project);
+            if (!project){
+                throw new Error('Project with id ${data.project} not found');
+            }
+            project.issues.push(savedIssue._id);
+            await project.save();
+
+            return savedIssue;
+
+        } catch (err) {
+            throw new Error(`Unable to create issue: ${err.message}`);
         }
     }
 }
