@@ -14,7 +14,9 @@ IssueShema=new Schema(
         Priority:{type:String,require:true},
         CreateDate:{type:Date,require:true,set:stripTime},
         UpdateDate:{type:Date,require:true,set:stripTime},
-        project: { type: Schema.Types.ObjectId, ref: 'Project', required: true }
+        project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+        sprint: { type: Schema.Types.ObjectId, ref: 'Sprint' }
+
 
     },{ timestamps: true }
 );

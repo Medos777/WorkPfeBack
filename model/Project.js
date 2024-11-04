@@ -37,17 +37,19 @@ const ProjectSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Team'
     }
-}, {
+},
+
+    {
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
 
-ProjectSchema.virtual('epics', {
+/*ProjectSchema.virtual('epics', {
     ref: 'Epic',
     localField: '_id',
     foreignField: 'project'
-});
+});*/
 
 ProjectSchema.virtual('sprints', {
     ref: 'Sprint',
@@ -55,7 +57,6 @@ ProjectSchema.virtual('sprints', {
     foreignField: 'project'
 });
 
-// Virtual for associated boards
 ProjectSchema.virtual('boards', {
     ref: 'Board',
     localField: '_id',
