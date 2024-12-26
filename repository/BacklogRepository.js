@@ -1,4 +1,4 @@
-const Backlog = require('../models/backlog');
+const Backlog = require('../model/Backlog');
 
 class BacklogRepository {
     async createBacklog(data) {

@@ -1,12 +1,16 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
-const BacklogItemSchema = new Schema({
+const mongoose = require('mongoose');
+const Schema= mongoose.Schema;
+const backlogItemSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    description: String,
-    type: { type: String, enum: Object.values(ItemType), default: 'TASK' },
-    status: { type: String, enum: Object.values(Status), default: 'TO_DO' },
-    priority: { type: Number, default: 0 },
-    assignee: { type: Schema.Types.ObjectId, ref: 'User' },
-    createdAt: { type: Date, default: Date.now }
-});
-module.exports=mongoose.model('Issue',BacklogItemSchema);
+    description: { type: String },
+    type: { type: String, enum: ['story', 'task', 'bug'], required: true },
+    status: { type: String, enum: ['todo', 'in-progress', 'done'], default: 'todo' },
+    effortEstimate: { type: Number, default: 0 },
+    sprint: { type: mongoose.Schema.Types.ObjectId, ref: 'Sprint' },
+    project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
+    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+}, { timestamps: true });
+
+module.exports = mongoose.model('BacklogItem', backlogItemSchema);

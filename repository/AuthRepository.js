@@ -3,12 +3,11 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const users = require('../model/Users');
 
-// Nodemailer transporter configuration
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'trust10nft@gmail.com',  // Replace with your Gmail address
-        pass: 'Messi1233'  // Replace with your Gmail password or App Password
+        user: 'trust10nft@gmail.com',
+        pass: 'Messi1233'
     }
 });
 

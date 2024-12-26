@@ -8,11 +8,11 @@ const stripTime = (date) => {
 };
 
 const ProjectSchema = new Schema({
-
     projectName: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true // Ensure unique project names
     },
     projectDescription: {
         type: String,
@@ -33,23 +33,46 @@ const ProjectSchema = new Schema({
         ref: 'User',
         required: true
     },
-    team: {
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+    budget: {
+        type: Number,
+        default: 0,
+        validate: {
+            validator: (value) => value >= 0,
+            message: 'Budget must be a positive number'
+        }
+    },
+    costEstimate: {
+        type: Number,
+        default: 0,
+        validate: {
+            validator: (value) => value >= 0,
+            message: 'Cost estimate must be a positive number'
+        }
+    },
+    status: {
+        type: String,
+        enum: ['Planned', 'In Progress', 'Completed', 'On Hold'],
+        default: 'Planned'
+    },
+        progress: { type: Number, default: 0 },
+
+
+        createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'Team'
+        ref: 'User',
+        required: true
+    },
+    updatedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 },
-
     {
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
-
-/*ProjectSchema.virtual('epics', {
-    ref: 'Epic',
-    localField: '_id',
-    foreignField: 'project'
-});*/
 
 ProjectSchema.virtual('sprints', {
     ref: 'Sprint',
@@ -63,12 +86,14 @@ ProjectSchema.virtual('boards', {
     foreignField: 'project'
 });
 
-ProjectSchema.pre('save', async function(next) {
+ProjectSchema.pre('save', async function (next) {
     if (this.endDate < this.startDate) {
         return next(new Error('End date must be after start date'));
     }
 
-
+    if (this.costEstimate > this.budget) {
+        return next(new Error('Cost estimate cannot exceed the budget'));
+    }
 
     next();
 });

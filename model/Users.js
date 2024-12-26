@@ -11,7 +11,10 @@ USersSchema = new Schema(
         tel: {type: String, required: true},
         role: {type: String,
                 enum: ['admin', 'manager', 'developer'],
-                required: false, default: "admin"}
+                required: false, default: "admin"},
+            profileImage: { type: String },
+            bio: { type: String, maxlength: 500 },
+            lastLogin: { type: Date },
     },{ timestamps: true });
 USersSchema.pre('save', async function(next) {
         const user = this;
