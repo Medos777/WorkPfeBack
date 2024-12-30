@@ -9,7 +9,7 @@ class BacklogItemService {
     async getBacklogItemById(id) {
         const backlogItem = await backlogItemRepository.getBacklogItemById(id);
         if (!backlogItem) {
-            throw new Error('Backlog item not found');
+            throw new Error('ListBacklog item not found');
         }
         return backlogItem;
     }
@@ -17,7 +17,7 @@ class BacklogItemService {
     async updateBacklogItem(id, data) {
         const updatedBacklogItem = await backlogItemRepository.updateBacklogItem(id, data);
         if (!updatedBacklogItem) {
-            throw new Error('Backlog item not found or could not be updated');
+            throw new Error('ListBacklog item not found or could not be updated');
         }
         return updatedBacklogItem;
     }
@@ -25,7 +25,7 @@ class BacklogItemService {
     async deleteBacklogItem(id) {
         const deletedBacklogItem = await backlogItemRepository.deleteBacklogItem(id);
         if (!deletedBacklogItem) {
-            throw new Error('Backlog item not found or could not be deleted');
+            throw new Error('ListBacklog item not found or could not be deleted');
         }
         return deletedBacklogItem;
     }

@@ -12,7 +12,7 @@ const teamRoutes = require('./routes/TeamRoutes');
 const backlogRoutes = require('./routes/BacklogRoutes');
 const backlogItemsRoutes = require('./routes/BacklogItemsRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
-const { initSocket } = require('./notification'); // Import notification system
+const { initSocket } = require('./notification');
 
 const app = express();
 const server = http.createServer(app); // Create an HTTP server

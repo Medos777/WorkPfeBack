@@ -19,7 +19,7 @@ class BacklogItemRepository {
     }
 
     async getAllBacklogItems() {
-        return await BacklogItem.find().populate('assignee');
+        return await BacklogItem.find();
     }
 }
 
