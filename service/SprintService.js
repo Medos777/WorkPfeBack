@@ -17,5 +17,6 @@ module.exports  = {
     },
     async delete(id){
         return await sprintRepository.delete(id);
-    }
+    },
+
 }

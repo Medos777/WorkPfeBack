@@ -3,7 +3,7 @@ const Project = require('../model/Project');
 module.exports={
     async findAll(){
         try{
-            return await sprint.find();
+            return await sprint.find().populate('project').populate('backlogItems');;
         }catch (e){
             throw new Error(`Unable to retrieve sprints: ${e.message}`);
         }

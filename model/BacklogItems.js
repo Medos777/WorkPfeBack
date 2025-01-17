@@ -8,7 +8,7 @@ const backlogItemSchema = new mongoose.Schema({
     effortEstimate: { type: Number, default: 0 },
     sprint: { type: mongoose.Schema.Types.ObjectId, ref: 'Sprint', required: false },
     project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: false },
-    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // Ensure this is correct
+    assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
 }, { timestamps: true });

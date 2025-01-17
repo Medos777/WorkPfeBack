@@ -12,6 +12,8 @@ const teamRoutes = require('./routes/TeamRoutes');
 const backlogRoutes = require('./routes/BacklogRoutes');
 const backlogItemsRoutes = require('./routes/BacklogItemsRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const templateRoutes = require('./routes/TemplateRoutes');
+
 const { initSocket } = require('./notification');
 
 const app = express();
@@ -38,6 +40,7 @@ initSocket(server);
 // Define Routes
 app.use('/api/notifications', notificationRoutes);
 app.use('/api', usersRoutes);
+app.use('/api', teamRoutes);
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', issueRoutes);
@@ -45,6 +48,7 @@ app.use('/api', sprintRoutes);
 app.use('/api', teamRoutes);
 app.use('/api', backlogRoutes);
 app.use('/api', backlogItemsRoutes);
+app.use('/api', templateRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

@@ -1,10 +1,9 @@
-// notificationService.js
 const notificationRepository = require('../repository/notificationRepository');
-const { sendNotification } = require('../notification'); // Socket.IO functions
+const { sendNotification } = require('../notification');
 
 const createAndSendNotification = async (data) => {
     const notification = await notificationRepository.createNotification(data);
-    sendNotification(notification); // Broadcast using Socket.IO
+    sendNotification(notification);
     return notification;
 };
 
