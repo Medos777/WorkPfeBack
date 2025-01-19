@@ -1,7 +1,7 @@
-// notificationRoutes.js
+// NotificationRoutes.js
 const express = require('express');
 const router = express.Router();
-const notificationController = require('../controller/notificationController');
+const notificationController = require('../controller/NotificationController');
 
 // Create a new notification
 router.post('/', notificationController.createNotification);
@@ -9,7 +9,7 @@ router.post('/', notificationController.createNotification);
 // Get notifications for a specific user
 router.get('/:userId', notificationController.getNotifications);
 
-// Mark a notification as read
+// Mark notification as read
 router.put('/:id/read', notificationController.markAsRead);
 
 // Delete a notification

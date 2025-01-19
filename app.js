@@ -3,6 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const http = require('http'); // Required for Socket.IO integration
+const path = require('path');
+const fs = require('fs');
 const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/AuthRoutes');
 const projectRoutes = require('./routes/ProjectRoutes');
@@ -11,8 +13,10 @@ const sprintRoutes = require('./routes/SprintRoutes');
 const teamRoutes = require('./routes/TeamRoutes');
 const backlogRoutes = require('./routes/BacklogRoutes');
 const backlogItemsRoutes = require('./routes/BacklogItemsRoutes');
-const notificationRoutes = require('./routes/notificationRoutes');
+const notificationRoutes = require('./routes/NotificationRoutes');
 const templateRoutes = require('./routes/TemplateRoutes');
+const BoardRoutes = require('./routes/BoardRoutes');
+const epicRoutes = require('./routes/EpicRoutes');
 
 const { initSocket } = require('./notification');
 
@@ -37,18 +41,41 @@ db.once('open', () => {
 // Initialize Socket.IO
 initSocket(server);
 
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, 'uploads');
+const attachmentsDir = path.join(uploadsDir, 'attachments');
+
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+if (!fs.existsSync(attachmentsDir)) {
+    fs.mkdirSync(attachmentsDir);
+}
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Define Routes
 app.use('/api/notifications', notificationRoutes);
+
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.originalUrl}`);
+    next();
+});
+
+// Register all API routes
+app.use('/api', epicRoutes); // Epic routes first
 app.use('/api', usersRoutes);
 app.use('/api', teamRoutes);
 app.use('/api', authRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', issueRoutes);
 app.use('/api', sprintRoutes);
-app.use('/api', teamRoutes);
 app.use('/api', backlogRoutes);
 app.use('/api', backlogItemsRoutes);
 app.use('/api', templateRoutes);
+app.use('/api', BoardRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

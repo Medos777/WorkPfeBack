@@ -1,4 +1,4 @@
-const backlogRepository = require('../repository/backlogRepository');
+const backlogRepository = require('../repository/BacklogRepository');
 
 class BacklogService {
     async createBacklog(data) {
@@ -31,6 +31,10 @@ class BacklogService {
 
     async getAllBacklogs() {
         return await backlogRepository.getAllBacklogs();
+    }
+
+    async getBacklogsByProjectId(projectId) {
+        return await backlogRepository.getBacklogsByProjectId(projectId);
     }
 }
 

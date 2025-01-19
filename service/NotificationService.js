@@ -1,22 +1,22 @@
-const notificationRepository = require('../repository/notificationRepository');
+const NotificationRepository = require('../repository/NotificationRepository');
 const { sendNotification } = require('../notification');
 
 const createAndSendNotification = async (data) => {
-    const notification = await notificationRepository.createNotification(data);
+    const notification = await NotificationRepository.createNotification(data);
     sendNotification(notification);
     return notification;
 };
 
 const getUserNotifications = async (userId) => {
-    return await notificationRepository.getNotificationsForUser(userId);
+    return await NotificationRepository.getNotificationsForUser(userId);
 };
 
 const markNotificationAsRead = async (notificationId) => {
-    return await notificationRepository.markAsRead(notificationId);
+    return await NotificationRepository.markAsRead(notificationId);
 };
 
 const deleteNotification = async (notificationId) => {
-    return await notificationRepository.deleteNotification(notificationId);
+    return await NotificationRepository.deleteNotification(notificationId);
 };
 
 module.exports = {

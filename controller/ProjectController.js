@@ -1,6 +1,5 @@
 const ProjectService = require('../service/ProjectService');
-const notificationService = require('../service/notificationService'); // Import notification service
-
+const notificationService = require('../service/NotificationService');
 module.exports = {
     async findAll(req, res, next) {
         try {

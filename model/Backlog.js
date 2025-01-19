@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const BacklogItemSchema = require('./backlogItems').schema;
+const BacklogItemSchema = require('./BacklogItems').schema;
 const BacklogSchema = new Schema({
     name: { type: String, required: true },
     project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
