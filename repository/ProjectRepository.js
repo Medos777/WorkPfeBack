@@ -7,6 +7,15 @@ module.exports={
             throw new Error(`Error retrieving projects: ${err.message}`);
         }
     },
+    async findByProjectKey(projectKey) {
+        try {
+            return await Project.findOne({ projectKey });
+        } catch (err) {
+            throw new Error(`Error finding project by key: ${err.message}`);
+        }
+    },
+
+
     async findById(id){
         try {
             return await Project.findById(id);

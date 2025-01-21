@@ -36,7 +36,15 @@ class BacklogController {
             res.status(404).json({ error: error.message });
         }
     }
-
+    async getBacklogsByProjectId(req, res) {
+        try {
+            const backlogs = await backlogService.getBacklogsByProjectId(req.params.projectId);
+            res.json(backlogs);
+        } catch (error) {
+            console.error('Error getting backlogs by project:', error);
+            res.status(500).json({ message: error.message || 'Failed to fetch backlogs for project' });
+        }
+    }   
     async getAllBacklogs(req, res) {
         try {
             const backlogs = await backlogService.getAllBacklogs();

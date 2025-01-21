@@ -6,8 +6,8 @@ module.exports  = {
     async findById(id) {
         return await sprintRepository.findById(id);
     },
-    async findByProject(project){
-        return await sprintRepository.findByProject(project);
+    async findByProjectId(projectId){
+        return await sprintRepository.findByProjectId(projectId);
     },
     async create(data){
         return await sprintRepository.create(data);

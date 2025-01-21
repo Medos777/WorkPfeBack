@@ -12,7 +12,14 @@ class BacklogService {
         }
         return backlog;
     }
-
+    async getBacklogsByProjectId(projectId) {
+        try {
+            return await backlogRepository.getBacklogsByProjectId(projectId);
+        } catch (error) {
+            console.error('Error in getBacklogsByProjectId:', error);
+            throw error;
+        }   
+    }
     async updateBacklog(id, data) {
         const updatedBacklog = await backlogRepository.updateBacklog(id, data);
         if (!updatedBacklog) {

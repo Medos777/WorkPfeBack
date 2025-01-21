@@ -59,7 +59,14 @@ class EpicService {
             throw error;
         }
     }
-
+    async getEpicByProjectId(projectId) {
+        try {
+            return await EpicRepository.findByProjectId(projectId);
+        } catch (error) {
+            console.error('Error in getEpicByProjectId:', error);
+            throw error;
+        }   
+    }
     async getAllEpics(filters = {}) {
         try {
             return await EpicRepository.findAll(filters);

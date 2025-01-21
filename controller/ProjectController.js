@@ -1,5 +1,6 @@
 const ProjectService = require('../service/ProjectService');
 const notificationService = require('../service/NotificationService');
+const { findByProjectKey } = require('../repository/ProjectRepository');
 module.exports = {
     async findAll(req, res, next) {
         try {
@@ -9,13 +10,23 @@ module.exports = {
             next(error);
         }
     },
-
-    async findById(req, res, next) {
-        try {
-            const project = await ProjectService.findById(req.params.id);
-            if (!project) {
-                return res.status(404).json({ message: 'Project not found' });
-            }
+async findByProjectKey(req, res, next) {
+    try{
+        const project = await ProjectService.findByProjectKey(req.params.projectKey);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json(project);
+    } catch (error) {
+        next(error);
+    }
+    },
+async findById(req, res, next) {
+    try {
+        const project = await ProjectService.findById(req.params.id);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
             res.status(200).json(project);
         } catch (error) {
             next(error);

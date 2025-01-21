@@ -8,11 +8,22 @@ const stripTime = (date) => {
 };
 
 const ProjectSchema = new Schema({
+    projectType: {
+        type: String,
+        required: true,
+        enum: ['Scrum', 'Kanban', 'simple'],
+        default: 'scrum'
+    },
     projectName: {
         type: String,
         required: true,
         trim: true,
-        unique: true // Ensure unique project names
+        unique: true 
+    },
+    projectKey: {
+        type: String,
+        required: true,
+        unique: true 
     },
     projectDescription: {
         type: String,
@@ -31,9 +42,9 @@ const ProjectSchema = new Schema({
     projectLead: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     },
-    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' ,require:false}],
     budget: {
         type: Number,
         default: 0,
@@ -84,6 +95,18 @@ ProjectSchema.virtual('boards', {
     ref: 'Board',
     localField: '_id',
     foreignField: 'project'
+});
+ProjectSchema.pre('save', function (next) {
+    if (!this.projectKey) {
+        const projectName = this.projectName;
+        const projectType = this.projectType;
+        const projectKey = `${projectType.substring(0, 2)}-${projectName
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .substring(0, 10)}`;
+        this.projectKey = projectKey;
+    }
+    next();
 });
 
 ProjectSchema.pre('save', async function (next) {

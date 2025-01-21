@@ -29,11 +29,17 @@ module.exports={
             throw new Error(`Unable to retrieve sprint: ${e.message}`);
         }
     },
-    async findByProject(project) {
+    async findByProjectId(projectId) {
         try {
-            return await sprint.find({project: project});
-        } catch (e) {
-            throw new Error(`Unable to find Issue by Project: ${e.message}`);
+            console.log('Repository: Finding sprints for project ID:', projectId);
+            const results = await sprint.find({ project: projectId })
+                .populate('project')
+                .populate('backlogItems');
+            console.log('Repository: Found sprints:', results);
+            return results;
+        } catch (err) {
+            console.error('Repository: Error finding sprints:', err);
+            throw new Error(`Unable to find sprints for project: ${err.message}`);
         }
     },
     async create(data) {

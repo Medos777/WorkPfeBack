@@ -5,7 +5,8 @@ class BacklogRepository {
         const backlog = new Backlog(data);
         return await backlog.save();
     }
-
+async getBacklogsByProjectId(projectId) {
+    return await Backlog.find({ project: projectId });}
     async getBacklogById(id) {
         return await Backlog.findById(id).populate('project').populate('items.assignee');
     }

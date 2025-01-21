@@ -13,7 +13,9 @@ class EpicRepository {
     async findById(id) {
         return await Epic.findById(id);
     }
-
+async findByProjectId(projectId) {
+    return await Epic.find({ project: projectId });
+}
     async update(id, data) {
         return await Epic.findByIdAndUpdate(id, data, { new: true, runValidators: true });
     }

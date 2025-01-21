@@ -22,16 +22,15 @@ module.exports = {
         }
     },
 
-    async findByProject(req, res, next) {
+    async findByProjectId(req, res, next) {
         try {
-            const SprintProject = await sprintService.findByProject(req.params.project);
-            if (!SprintProject || SprintProject.length === 0) {
-                return res.status(404).json({ message: 'No sprint found with the specified project' });
-            }
-            res.status(200).json(SprintProject);
+            console.log('Finding sprints for project ID:', req.params.id);
+            const sprints = await sprintService.findByProjectId(req.params.id);
+            console.log('Found sprints:', sprints);
+            res.json(sprints);
         } catch (error) {
-            console.error('Error finding sprint by project:', error.message);
-            next(error);
+            console.error('Error getting sprints by project:', error);
+            res.status(500).json({ message: error.message || 'Failed to fetch sprints for project' });
         }
     },
 

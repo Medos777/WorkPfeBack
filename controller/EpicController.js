@@ -52,6 +52,15 @@ class EpicController {
             res.status(500).json({ message: error.message || 'Failed to fetch epics for project' });
         }
     }
+    async getEpicsByProjectId(req, res) {
+        try {
+            const epics = await EpicService.getEpicsByProjectId(req.params.projectId);
+            res.json(epics);
+        } catch (error) {
+            console.error('Error getting epics by project:', error);
+            res.status(500).json({ message: error.message || 'Failed to fetch epics for project' });
+        }
+    }   
 
     async updateEpic(req, res) {
         try {

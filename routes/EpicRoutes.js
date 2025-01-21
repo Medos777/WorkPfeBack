@@ -28,5 +28,5 @@ router.post('/epics/:id/watchers', EpicController.addWatcher);
 
 // Remove watcher from epic
 router.delete('/epics/:id/watchers', EpicController.removeWatcher);
-
+router.get('/epics/projectId/:projectId', EpicController.getEpicsByProjectId);
 module.exports = router;
