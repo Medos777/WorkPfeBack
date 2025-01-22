@@ -44,12 +44,15 @@ const ProjectSchema = new Schema({
         ref: 'User',
         required: false
     },
-    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' ,require:false}],
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team', require: false }],
+    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
     budget: {
         type: Number,
         default: 0,
         validate: {
-            validator: (value) => value >= 0,
+            validator: function(value) {
+                return value >= 0;
+            },
             message: 'Budget must be a positive number'
         }
     },
@@ -57,7 +60,9 @@ const ProjectSchema = new Schema({
         type: Number,
         default: 0,
         validate: {
-            validator: (value) => value >= 0,
+            validator: function(value) {
+                return value >= 0;
+            },
             message: 'Cost estimate must be a positive number'
         }
     },
@@ -66,10 +71,10 @@ const ProjectSchema = new Schema({
         enum: ['Planned', 'In Progress', 'Completed', 'On Hold'],
         default: 'Planned'
     },
-        progress: { type: Number, default: 0 },
+    progress: { type: Number, default: 0 },
 
 
-        createdBy: {
+    createdBy: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -79,7 +84,7 @@ const ProjectSchema = new Schema({
         ref: 'User'
     }
 },
-    {
+{
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

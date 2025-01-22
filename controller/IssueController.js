@@ -75,13 +75,29 @@ class IssueController {
 
     async create(req, res, next) {
         try {
+            console.log('Creating issue with data:', req.body);
             const issue = await issueService.create(req.body);
+            console.log('Issue created successfully:', issue);
             res.status(201).json(issue);
         } catch (error) {
-            if (error.message.includes('Missing required fields')) {
-                return res.status(400).json({ message: error.message });
+            console.error('Error in issue creation:', error);
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({
+                    message: 'Validation Error',
+                    details: Object.values(error.errors).map(err => err.message)
+                });
             }
-            next(error);
+            if (error.code === 11000) {
+                return res.status(409).json({
+                    message: 'Duplicate key error',
+                    details: error.keyValue
+                });
+            }
+            res.status(500).json({
+                message: 'Error creating issue',
+                error: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            });
         }
     }
 

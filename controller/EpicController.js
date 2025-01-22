@@ -36,10 +36,13 @@ class EpicController {
     async getEpicById(req, res) {
         try {
             const epic = await EpicService.getEpicById(req.params.id);
+            if (!epic) {
+                return res.status(404).json({ message: 'Epic not found' });
+            }
             res.json(epic);
         } catch (error) {
             console.error('Error getting epic by id:', error);
-            res.status(404).json({ message: error.message || 'Epic not found' });
+            res.status(500).json({ message: error.message || 'Failed to fetch epic' });
         }
     }
 
@@ -52,43 +55,47 @@ class EpicController {
             res.status(500).json({ message: error.message || 'Failed to fetch epics for project' });
         }
     }
-    async getEpicsByProjectId(req, res) {
-        try {
-            const epics = await EpicService.getEpicsByProjectId(req.params.projectId);
-            res.json(epics);
-        } catch (error) {
-            console.error('Error getting epics by project:', error);
-            res.status(500).json({ message: error.message || 'Failed to fetch epics for project' });
-        }
-    }   
 
     async updateEpic(req, res) {
         try {
             const epic = await EpicService.updateEpic(req.params.id, req.body);
+            if (!epic) {
+                return res.status(404).json({ message: 'Epic not found' });
+            }
             res.json(epic);
         } catch (error) {
             console.error('Error updating epic:', error);
-            res.status(400).json({ message: error.message || 'Failed to update epic' });
+            if (error.message === 'Project not found') {
+                res.status(404).json({ message: error.message });
+            } else {
+                res.status(400).json({ message: error.message || 'Failed to update epic' });
+            }
         }
     }
 
     async deleteEpic(req, res) {
         try {
-            await EpicService.deleteEpic(req.params.id);
+            const epic = await EpicService.deleteEpic(req.params.id);
+            if (!epic) {
+                return res.status(404).json({ message: 'Epic not found' });
+            }
             res.status(204).send();
         } catch (error) {
             console.error('Error deleting epic:', error);
-            res.status(400).json({ message: error.message || 'Failed to delete epic' });
+            res.status(500).json({ message: error.message || 'Failed to delete epic' });
         }
     }
 
     async updateEpicProgress(req, res) {
         try {
             const epic = await EpicService.updateEpicProgress(req.params.id);
+            if (!epic) {
+                return res.status(404).json({ message: 'Epic not found' });
+            }
             res.json(epic);
         } catch (error) {
             console.error('Error updating epic progress:', error);
-            res.status(400).json({ message: error.message || 'Failed to update epic progress' });
+            res.status(500).json({ message: error.message || 'Failed to update epic progress' });
         }
     }
 
@@ -111,6 +118,16 @@ class EpicController {
             res.status(400).json({ message: error.message || 'Failed to remove watcher' });
         }
     }
+
+    async getEpicsByProjectId(req, res) {
+        try {
+            const epics = await EpicService.getEpicsByProjectId(req.params.projectId);
+            res.json(epics);
+        } catch (error) {
+            console.error('Error getting epics by project:', error);
+            res.status(500).json({ message: error.message || 'Failed to fetch epics for project' });
+        }
+    }   
 }
 
 module.exports = new EpicController();

@@ -4,12 +4,6 @@ const ProjectRepository = require('../repository/ProjectRepository');
 class EpicService {
     async createEpic(epicData) {
         try {
-            // Generate epic key based on project
-            const project = await ProjectRepository.findById(epicData.project);
-            if (!project) {
-                throw new Error('Project not found');
-            }
-
             // Validate required fields
             if (!epicData.name) {
                 throw new Error('Epic name is required');
@@ -33,32 +27,56 @@ class EpicService {
                 throw new Error('Invalid priority value');
             }
 
-            // Generate key using project name
-            const nextNumber = await this.getNextEpicNumber(project._id);
-            epicData.key = `${project.projectName.substring(0, 3).toUpperCase()}-E${nextNumber}`;
+            let epicToCreate = { ...epicData };
+
+            // Handle project-related data
+            if (epicToCreate.project) {
+                try {
+                    const project = await ProjectRepository.findById(epicToCreate.project);
+                    if (project) {
+                        // Generate key using project name
+                        const nextNumber = await this.getNextEpicNumber(project._id);
+                        epicToCreate.key = `${project.projectName.substring(0, 3).toUpperCase()}-E${nextNumber}`;
+                    } else {
+                        // If project not found, create epic without project
+                        delete epicToCreate.project;
+                        const timestamp = Date.now();
+                        epicToCreate.key = `EPIC-${timestamp}`;
+                    }
+                } catch (error) {
+                    // If there's an error finding the project, create epic without project
+                    delete epicToCreate.project;
+                    const timestamp = Date.now();
+                    epicToCreate.key = `EPIC-${timestamp}`;
+                }
+            } else {
+                // For epics without project, use a timestamp-based key
+                const timestamp = Date.now();
+                epicToCreate.key = `EPIC-${timestamp}`;
+                // Ensure project is undefined
+                delete epicToCreate.project;
+            }
+
+            console.log('Creating epic with data:', epicToCreate);
 
             // Create epic using repository
-            const epic = await EpicRepository.create(epicData);
+            const epic = await EpicRepository.create(epicToCreate);
             return epic;
         } catch (error) {
             console.error('Error in createEpic:', error);
             throw error;
         }
     }
-
     async getNextEpicNumber(projectId) {
         try {
             const epics = await EpicRepository.findAll({ project: projectId });
-            const numbers = epics.map(epic => {
-                const match = epic.key.match(/E(\d+)$/);
-                return match ? parseInt(match[1], 10) : 0;
-            });
-            return numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+            return epics.length + 1;
         } catch (error) {
-            console.error('Error getting next epic number:', error);
+            console.error('Error in getNextEpicNumber:', error);
             throw error;
         }
     }
+
     async getEpicByProjectId(projectId) {
         try {
             return await EpicRepository.findByProjectId(projectId);
@@ -67,6 +85,7 @@ class EpicService {
             throw error;
         }   
     }
+
     async getAllEpics(filters = {}) {
         try {
             return await EpicRepository.findAll(filters);

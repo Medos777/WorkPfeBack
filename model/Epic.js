@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const EpicSchema = new Schema(
     {
-        key: { type: String, required: true, unique: true }, // e.g., EPIC-123
+        key: { type: String, unique: true }, // Optional now, only required for project-linked epics
         name: { type: String, required: true }, // Epic name/summary
         description: { type: String },
         status: { 
@@ -13,7 +13,7 @@ const EpicSchema = new Schema(
             required: true 
         },
         color: { type: String }, // Epic color for visualization
-        project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+        project: { type: Schema.Types.ObjectId, ref: 'Project', required: false },
         owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         startDate: { type: Date },
         dueDate: { type: Date },

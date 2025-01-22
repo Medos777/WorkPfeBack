@@ -81,7 +81,7 @@ class IssueRepository {
                     throw new Error(`Project with id ${data.project} not found`);
                 }
                 const issueCount = await Issue.countDocuments({ project: data.project });
-                data.key = `${project.key}-${issueCount + 1}`;
+                data.key = `${project.projectKey}-${issueCount + 1}`;
             }
 
             const newIssue = new Issue(data);
@@ -92,11 +92,18 @@ class IssueRepository {
             if (!project) {
                 throw new Error(`Project with id ${data.project} not found`);
             }
+
+            // Initialize issues array if it doesn't exist
+            if (!project.issues) {
+                project.issues = [];
+            }
+
             project.issues.push(savedIssue._id);
             await project.save();
 
             return savedIssue;
         } catch (e) {
+            console.error('Error creating issue:', e);
             throw new Error(`Unable to create Issue: ${e.message}`);
         }
     }
