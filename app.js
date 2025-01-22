@@ -24,7 +24,13 @@ const app = express();
 const server = http.createServer(app); // Create an HTTP server
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*',  // Allow all origins in development
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    credentials: false
+}));
 app.use(bodyParser.json());
 
 // MongoDB Connection
