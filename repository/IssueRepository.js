@@ -58,19 +58,7 @@ class IssueRepository {
         }
     }
 
-    async findBySprint(sprintId, options = {}) {
-        try {
-            const query = Issue.find({ sprint: sprintId });
-            
-            if (options.populate) {
-                query.populate('assignee reporter project epic watchers');
-            }
-            
-            return await query.exec();
-        } catch (e) {
-            throw new Error(`Unable to find Issues by Sprint: ${e.message}`);
-        }
-    }
+   
 
     async create(data) {
         try {
@@ -108,16 +96,22 @@ class IssueRepository {
         }
     }
 
-    async update(id, data) {
+    async update(id, updateData) {
         try {
+            console.log('Updating issue:', id, 'with data:', updateData);
             const updatedIssue = await Issue.findByIdAndUpdate(
                 id,
-                { ...data, updatedAt: new Date() },
+                { $set: updateData },
                 { new: true, runValidators: true }
             ).populate('assignee reporter project sprint epic watchers');
             
+            if (!updatedIssue) {
+                throw new Error('Issue not found');
+            }
+            
             return updatedIssue;
         } catch (e) {
+            console.error('Error updating issue:', e);
             throw new Error(`Unable to update Issue: ${e.message}`);
         }
     }

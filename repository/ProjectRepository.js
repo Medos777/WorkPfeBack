@@ -15,6 +15,14 @@ module.exports={
         }
     },
 
+    async findByTeamId(teamId) {
+        try {
+            return await Project.find({ team: teamId });
+        } catch (err) {
+            throw new Error(`Error finding projects by team ID: ${err.message}`);
+        }
+    },
+
 
     async findById(id){
         try {

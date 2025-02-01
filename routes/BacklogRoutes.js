@@ -8,5 +8,6 @@ router.post('/Backlogs', backlogController.createBacklog);
 router.put('/Backlogs/:id', backlogController.updateBacklog);
 router.delete('/Backlogs/:id', backlogController.deleteBacklog);
 router.get('/Backlogs/projectId/:projectId', backlogController.getBacklogsByProjectId);
+router.get('/Backlogs/user/:userId', backlogController.getBacklogsByUser);
 
 module.exports = router;

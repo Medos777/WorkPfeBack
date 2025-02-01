@@ -32,19 +32,17 @@ const upload = multer({
 
 // Basic CRUD routes
 router.get('/issues', issueController.findAll);
+
+// Project, Epic, and Sprint routes (must come before :id route)
+router.get('/issues/project/:projectId', issueController.findByProject);
+router.get('/issues/epic/:epicId', issueController.findByEpic);
+router.get('/issues/sprint/:sprintId', issueController.findBySprint);
+
+// Individual issue routes
 router.get('/issues/:id', issueController.findById);
 router.post('/issues', issueController.create);
 router.put('/issues/:id', issueController.update);
 router.delete('/issues/:id', issueController.delete);
-
-// Project related routes
-router.get('/issues/project/:projectId', issueController.findByProject);
-
-// Epic related routes
-router.get('/issues/epic/:epicId', issueController.findByEpic);
-
-// Sprint related routes
-router.get('/issues/sprint/:sprintId', issueController.findBySprint);
 
 // Comment routes
 router.post('/issues/:id/comments', issueController.addComment);

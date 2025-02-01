@@ -20,6 +20,15 @@ class BacklogService {
             throw error;
         }   
     }
+    async getBacklogsByUser(userId) {
+        try {
+            return await backlogRepository.getBacklogsByUser(userId);
+        } catch (error) {
+            console.error('Error in getBacklogsByUser:', error);
+            throw error;
+        }
+    }
+
     async updateBacklog(id, data) {
         const updatedBacklog = await backlogRepository.updateBacklog(id, data);
         if (!updatedBacklog) {

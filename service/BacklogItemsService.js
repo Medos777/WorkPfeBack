@@ -13,6 +13,13 @@ class BacklogItemService {
         }
         return backlogItem;
     }
+    async getBacklogItemsByUser(userId) {
+        const backlogItems = await backlogItemRepository.getBacklogItemsByUser(userId);
+        if (!backlogItems || backlogItems.length === 0) {
+            throw new Error('No backlog items found for this user');
+        }
+        return backlogItems;
+    }
 
     async updateBacklogItem(id, data) {
         const updatedBacklogItem = await backlogItemRepository.updateBacklogItem(id, data);

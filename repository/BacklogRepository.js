@@ -14,6 +14,10 @@ async getBacklogsByProjectId(projectId) {
     async updateBacklog(id, data) {
         return await Backlog.findByIdAndUpdate(id, data, { new: true });
     }
+    async getBacklogsByUser(userId) {
+        return await Backlog.find({ 'items.assignee': userId }).populate('project').populate('items.assignee');
+    }
+
 
     async deleteBacklog(id) {
         return await Backlog.findByIdAndDelete(id);

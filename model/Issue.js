@@ -31,7 +31,6 @@ const IssueSchema = new Schema(
         assignee: { type: Schema.Types.ObjectId, ref: 'User' },
         reporter: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         project: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
-        sprint: { type: Schema.Types.ObjectId, ref: 'Sprint' },
         epic: { type: Schema.Types.ObjectId, ref: 'Issue' }, // Reference to parent epic if this is a story
         storyPoints: { 
             type: Number,

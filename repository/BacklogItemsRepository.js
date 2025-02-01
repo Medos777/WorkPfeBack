@@ -9,6 +9,10 @@ class BacklogItemRepository {
     async getBacklogItemById(id) {
         return await BacklogItem.findById(id).populate('assignee');
     }
+    async getBacklogItemsByUser(userId) {
+        return await BacklogItem.find({ assignee: userId });
+    }
+
 
     async updateBacklogItem(id, data) {
         return await BacklogItem.findByIdAndUpdate(id, data, { new: true });

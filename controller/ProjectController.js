@@ -10,6 +10,18 @@ module.exports = {
             next(error);
         }
     },
+    async findByTeams(req, res, next) {
+        try {
+            const teams = await ProjectService.findByTeams(req.params.teamId);
+            if (!teams || teams.length === 0) {
+                return res.status(404).json({ message: 'No projects found for these teams' });
+            }
+            res.status(200).json(teams);
+        } catch (error) {
+            next(error);
+        }
+    },
+
 async findByProjectKey(req, res, next) {
     try{
         const project = await ProjectService.findByProjectKey(req.params.projectKey);

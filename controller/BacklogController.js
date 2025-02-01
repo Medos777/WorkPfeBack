@@ -18,6 +18,15 @@ class BacklogController {
             res.status(404).json({ error: error.message });
         }
     }
+    async getBacklogsByUser(req, res) {
+        try {
+            const backlogs = await backlogService.getBacklogsByUser(req.params.userId);
+            res.status(200).json(backlogs);
+        } catch (error) {
+            console.error('Error getting backlogs by user:', error);
+            res.status(500).json({ message: error.message || 'Failed to fetch backlogs for user' });
+        }
+    }
 
     async updateBacklog(req, res) {
         try {

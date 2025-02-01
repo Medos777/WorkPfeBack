@@ -18,6 +18,14 @@ class BacklogItemController {
             res.status(404).json({ error: error.message });
         }
     }
+    async getBacklogItemsByUser(req, res) {
+        try {
+            const backlogItems = await backlogItemService.getBacklogItemsByUser(req.params.userId);
+            res.status(200).json(backlogItems);
+        } catch (error) {
+            res.status(404).json({ error: error.message });
+        }
+    }
 
     async updateBacklogItem(req, res) {
         try {

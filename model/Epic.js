@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
 const EpicSchema = new Schema(
     {
         key: { type: String, unique: true }, // Optional now, only required for project-linked epics
@@ -17,6 +18,7 @@ const EpicSchema = new Schema(
         owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         startDate: { type: Date },
         dueDate: { type: Date },
+        issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
         progress: {
             total: { type: Number, default: 0 }, // Total number of issues
             completed: { type: Number, default: 0 } // Completed issues
@@ -38,12 +40,6 @@ const EpicSchema = new Schema(
     }
 );
 
-// Virtual for child issues
-EpicSchema.virtual('issues', {
-    ref: 'Issue',
-    localField: '_id',
-    foreignField: 'epic'
-});
 
 // Method to calculate progress
 EpicSchema.methods.updateProgress = async function() {

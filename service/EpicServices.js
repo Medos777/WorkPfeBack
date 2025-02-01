@@ -1,5 +1,6 @@
 const EpicRepository = require('../repository/EpicRepository');
 const ProjectRepository = require('../repository/ProjectRepository');
+const IssueRepository = require('../repository/IssueRepository');
 
 class EpicService {
     async createEpic(epicData) {
@@ -59,14 +60,28 @@ class EpicService {
 
             console.log('Creating epic with data:', epicToCreate);
 
-            // Create epic using repository
-            const epic = await EpicRepository.create(epicToCreate);
-            return epic;
+            // Créer l'epic
+            const createdEpic = await EpicRepository.create(epicToCreate);
+
+            // Mettre à jour les issues si elles sont fournies
+            if (epicToCreate.issues && epicToCreate.issues.length > 0) {
+                console.log('Updating issues for epic:', createdEpic._id);
+                const updatePromises = epicToCreate.issues.map(issueId =>
+                    IssueRepository.update(issueId, { epic: createdEpic._id })
+                );
+                await Promise.all(updatePromises);
+            }
+
+            // Récupérer l'epic avec les issues mises à jour
+            const populatedEpic = await EpicRepository.findById(createdEpic._id);
+            return populatedEpic;
+
         } catch (error) {
             console.error('Error in createEpic:', error);
             throw error;
         }
     }
+
     async getNextEpicNumber(projectId) {
         try {
             const epics = await EpicRepository.findAll({ project: projectId });
@@ -124,10 +139,39 @@ class EpicService {
 
     async updateEpic(id, updateData) {
         try {
-            const epic = await EpicRepository.update(id, updateData);
-            if (!epic) {
+            // Get current epic to compare issues
+            const currentEpic = await EpicRepository.findById(id);
+            if (!currentEpic) {
                 throw new Error('Epic not found');
             }
+
+            // Update the epic
+            const epic = await EpicRepository.update(id, updateData);
+
+            // Handle issues updates
+            const currentIssues = new Set(currentEpic.issues?.map(i => i.toString()) || []);
+            const newIssues = new Set(updateData.issues || []);
+
+            // Remove epic reference from issues that were removed
+            const removedIssues = [...currentIssues].filter(x => !newIssues.has(x));
+            await Promise.all(removedIssues.map(async (issueId) => {
+                try {
+                    await IssueRepository.update(issueId, { $unset: { epic: "" } });
+                } catch (err) {
+                    console.error(`Error removing epic reference from issue ${issueId}:`, err);
+                }
+            }));
+
+            // Add epic reference to new issues
+            const addedIssues = [...newIssues].filter(x => !currentIssues.has(x));
+            await Promise.all(addedIssues.map(async (issueId) => {
+                try {
+                    await IssueRepository.update(issueId, { epic: id });
+                } catch (err) {
+                    console.error(`Error adding epic reference to issue ${issueId}:`, err);
+                }
+            }));
+
             return epic;
         } catch (error) {
             console.error('Error in updateEpic:', error);
@@ -137,11 +181,26 @@ class EpicService {
 
     async deleteEpic(id) {
         try {
-            const epic = await EpicRepository.delete(id);
+            // Get epic to remove references
+            const epic = await EpicRepository.findById(id);
             if (!epic) {
                 throw new Error('Epic not found');
             }
-            return epic;
+
+            // Remove epic reference from all associated issues
+            if (epic.issues && epic.issues.length > 0) {
+                await Promise.all(epic.issues.map(async (issueId) => {
+                    try {
+                        await IssueRepository.update(issueId, { $unset: { epic: "" } });
+                    } catch (err) {
+                        console.error(`Error removing epic reference from issue ${issueId}:`, err);
+                    }
+                }));
+            }
+
+            // Delete the epic
+            const deletedEpic = await EpicRepository.delete(id);
+            return deletedEpic;
         } catch (error) {
             console.error('Error in deleteEpic:', error);
             throw error;
